@@ -1,4 +1,4 @@
-# OtterGesture
+ct# OtterGesture
 This library works with the Gesture sensor on OtterBoard 
 ![](https://github.com/Vishal01Mehra/OtterGesture/blob/main/Resources/OTTER.jpg)
 
@@ -6,66 +6,44 @@ This Library is based on [SparkFun_APDS-9960_Library](https://github.com/sparkfu
 
 ## Features
 
- - [x] Send key strokes
- - [x] Send text
- - [x] Press/release individual keys
- - [x] Media keys are supported
- - [ ] Read Numlock/Capslock/Scrolllock state
- - [x] Set battery level (basically works, but doesn't show up in Android's status bar)
- - [x] Compatible with Android
- - [x] Compatible with Windows
- - [x] Compatible with Linux
- - [x] Compatible with MacOS X (not stable, some people have issues, doesn't work with old devices)
- - [x] Compatible with iOS (not stable, some people have issues, doesn't work with old devices)
+ - [x] Detect 6 different gestures (UP/DOWN/LEFT/RIGHT/NEAR/FAR)
+ - [x] Measure Ambient Light 
+ - [x] Detect Object Colors (RED-GREEN-BLUE)
+ - [x] Measure Distance up to 200m.
 
 ## Example
-
+### Gesture sensor
 ``` C++
 /**
- * This example turns the OtterBorad into a Bluetooth Low Energy keyboard that writes the words, presses Enter, presses a media key, and then Ctrl+Alt+Delete
+ * This example turns the OtterBorad into a Gesture detection device.
  */
-#include <OtterKeyboard.h>
+#include <Wire.h>
+#include <OtterGesture.h>
 
-OtterKeyboard OtterKeyboard;
+OtterGesture Gesture = OtterGesture();
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("Starting BLE work!");
-  OtterKeyboard.begin();
+  if (Gesture.init()) {
+    Serial.println(F("Otter Gesture initialization complete"));
+
+    if (Gesture.enableGestureSensor(true)) {
+    Serial.println(F("Gesture sensor is now running"));
+    if (Gesture.setGestureGain(GGAIN_4X)) {
+      Serial.println("Gesture Gain Snet");
+    }
+  } else {
+    Serial.println(F("Something went wrong during gesture sensor init!"));
+  }
+}
 }
 
 void loop() {
-  if(OtterKeyboard.isConnected()) {
-    Serial.println("Sending 'Hello world'...");
-    OtterKeyboard.print("Hello world");
-
-    delay(1000);
-
-    Serial.println("Sending Enter key...");
-    OtterKeyboard.write(KEY_RETURN);
-
-    delay(1000);
-
-    Serial.println("Sending Play/Pause media key...");
-    OtterKeyboard.write(KEY_MEDIA_PLAY_PAUSE);
-
-    delay(1000);
-    
-   //
-   // Below is an example of pressing multiple keyboard modifiers 
-   // which by default is commented out. 
-   // 
-   /* Serial.println("Sending Ctrl+Alt+Delete...");
-    OtterKeyboard.press(KEY_LEFT_CTRL);
-    OtterKeyboard.press(KEY_LEFT_ALT);
-    OtterKeyboard.press(KEY_DELETE);
-    delay(100);
-    OtterKeyboard.releaseAll();
-    */
-
+  bool GestureAvailability = Gesture.isGestureAvailable();
+  if (GestureAvailability) {
+    int GestureType = Gesture.readGesture();
+    Serial.println(GestureType);
   }
-  Serial.println("Waiting 5 seconds...");
-  delay(5000);
 }
 ```
 ## License
@@ -79,5 +57,5 @@ Please use, reuse, and modify these files as you see fit. Please maintain attrib
 Contributions are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Base Library 
-[ESP32-BLE-Keyboard](https://github.com/T-vK/ESP32-BLE-Keyboard)
+[SparkFun_APDS-9960_Library](https://github.com/Vishal01Mehra/OtterGesture/blob/main/Resources/OTTER.jpg)
 
