@@ -1,4 +1,4 @@
-ct# OtterGesture
+# OtterGesture
 This library works with the Gesture sensor on OtterBoard 
 ![](https://github.com/Vishal01Mehra/OtterGesture/blob/main/Resources/OTTER.jpg)
 
